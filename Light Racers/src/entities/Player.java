@@ -1,7 +1,12 @@
 package entities;
 
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Circle;
+
 public class Player {
 
+	private Circle playerCirc;
+	
 	private double xPos;
 	private double yPos;
 	
@@ -9,6 +14,8 @@ public class Player {
 	private double speed;
 	private double cEnergy;
 	private double maxEnergy;
+	private double force = 0;
+	private String dir = "stopped";
 
 	
 	private boolean ftl = false;
@@ -21,6 +28,71 @@ public class Player {
 		this.speed = speed;
 		this.cEnergy = maxEnergy;
 		this.setMaxEnergy(maxEnergy);
+		playerCirc = new Circle((float)xPos, (float)yPos, (float)(Math.sqrt(mass)));
+	}
+	
+	public void move(){
+		if(dir.equals("up")){
+			force = -1;
+		}else if(dir.equals("down")){
+			force = 1;
+		}else if(dir.equals("stopped")){
+			force = 0;
+		}
+		
+		xPos += speed;
+		yPos += force;
+
+		System.out.println("ran");
+	}
+	
+	public Circle getPlayerCirc() {
+		return playerCirc;
+	}
+
+	public void setPlayerCirc(Circle playerCirc) {
+		this.playerCirc = playerCirc;
+	}
+
+	public double getForce() {
+		return force;
+	}
+
+	public void setForce(double force) {
+		this.force = force;
+	}
+
+	public String getDir() {
+		return dir;
+	}
+
+	public void setDir(String dir) {
+		this.dir = dir;
+	}
+
+	public void convert(String s){
+		
+		if(cEnergy>0){
+			if(s.equals("slower")){
+				mass += 10;
+				speed -= 0.1;
+			}
+			
+			if(s.equals("faster")){
+				mass -= 10;
+				speed += 0.1;
+			}
+			
+			cEnergy--;
+			playerCirc.setRadius((float) Math.sqrt(mass));
+		}
+	}
+	
+	public void draw(Graphics g){
+		playerCirc.setX((float)xPos);
+		playerCirc.setY((float)yPos);
+		
+		g.draw(playerCirc);
 	}
 	
 	public double getxPos() {
@@ -71,5 +143,4 @@ public class Player {
 	public void setMaxEnergy(double maxEnergy) {
 		this.maxEnergy = maxEnergy;
 	}
-	
 }
